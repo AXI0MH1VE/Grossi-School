@@ -2,7 +2,7 @@
 
 ## Folder Architecture
 
-```
+```text
 Grossi School/
 ├── 📁 docs/                    # Main institutional documentation
 │   ├── credibility-framework.md
