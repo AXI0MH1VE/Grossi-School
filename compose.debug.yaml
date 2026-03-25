@@ -1,0 +1,6 @@
+services:
+  grossischool:
+    image: grossischool
+    build:
+      context: .
+      dockerfile: ./Dockerfile
