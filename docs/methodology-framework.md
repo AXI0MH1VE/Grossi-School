@@ -19,7 +19,7 @@ To ensure that knowledge output is not merely technically correct but communicat
 * **High Perplexity (Unpredictability):** Intentional avoidance of predictable "AI-native" linguistic patterns in favor of creative, context-specific phrasing.
 * **High Burstiness (Rhythmic Variation):** The deliberate variation of sentence rhythm and structure to replicate authentic human thought processes.
 
-For absolute compliance, all information output must adhere to the [Multi-Pass Humanization Specification](file:///c:/Users/Lex/Desktop/Grossi%20School/text-humanization-specification.md).
+For absolute compliance, all information output must adhere to the [Multi-Pass Humanization Specification](../research/text-humanization-specification.md), which is further validated by the comprehensive [AI Detection Analysis](../research/ai-detection-analysis.md).
 
 ## 2. The Four-Phase Implementation Framework
 

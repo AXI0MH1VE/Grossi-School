@@ -125,7 +125,25 @@ Create a comprehensive documentation package for "Grossi School" - an educationa
 1. User reviews this plan
 2. Confirm which documents to prioritize
 3. Begin document creation in Code mode
-4. Iterate based on feedback
+4. Integrate AI Detection/Text Humanization research into framework
+5. Iterate based on feedback
+
+---
+
+## Research Integration: AI Detection & Text Humanization
+
+The "Computational Linguistic Analysis of Machine-Generated Text" document has been added to the project, providing:
+
+1. **Theoretical Foundation**: Mathematical basis for perplexity and burstiness metrics
+2. **Detection Evasion**: Advanced strategies for bypassing AI detectors
+3. **Institutional Policy Models**: University at Buffalo case study
+4. **Adversarial Techniques**: Text humanization methodologies
+
+### Integration Points
+
+- [`text-humanization-specification.md`](text-humanization-specification.md) - Now cross-referenced with full analysis
+- [`semantic-legitimacy-standards.md`](semantic-legitimacy-standards.md) - Validates metrics used
+- [`ARCHITECTURE.md`](ARCHITECTURE.md) - Created as master organizational document
 
 ---
 

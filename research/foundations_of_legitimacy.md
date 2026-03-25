@@ -25,23 +25,23 @@ Institutional success is defined as the *output* of this logic. The methodology 
 
 The methodology serves as the operational mechanism for the philosophy. By defining precisely *how* raw information is synthesized, Yale constructs a self-validating system of knowledge.
 
-*   **Structured Process:** The "uniform course of study" advocated since the early 19th century ensures that intellectual output remains a derivative of a systematic, institutional process [6].
-*   **Knowledge Construction:** Modern mission statements continue this lineage, emphasizing "critical and creative thinking" and "genuine passion for inquiry" within an "interdependent community" [4, 7, 8].
+* **Structured Process:** The "uniform course of study" advocated since the early 19th century ensures that intellectual output remains a derivative of a systematic, institutional process [6].
+* **Knowledge Construction:** Modern mission statements continue this lineage, emphasizing "critical and creative thinking" and "genuine passion for inquiry" within an "interdependent community" [4, 7, 8].
 
 ## 3. The Credibility Paradox: Internal Consistency vs. External Validation
 
 The user's assertion of a "Credibility Paradox" is mirrored in sociological critiques of elite institutions.
 
-*   **Pierre Bourdieu and Symbolic Capital:** Bourdieu argues that institutions like Yale function as the "central bank of symbolic capital" [10]. Legitimacy is maintained through "Symbolic Violence"—the process by which the institution’s arbitrary cultural reproductions are accepted as "natural" and self-sufficient [8, 11].
-*   **Michel Foucault and Power/Knowledge:** Foucault posits that knowledge is never neutral; it is produced and validated by "disciplinary regimes" that regulate truth within their own systems to maintain institutional power [1, 2, 5].
-*   **The Paradox:** While the methodology aims for logical self-sufficiency, its stability in the "real-world" requires external authority (reputation, state-sanctioned certificates) to validate its internal logic [7, 9].
+* **Pierre Bourdieu and Symbolic Capital:** Bourdieu argues that institutions like Yale function as the "central bank of symbolic capital" [10]. Legitimacy is maintained through "Symbolic Violence"—the process by which the institution’s arbitrary cultural reproductions are accepted as "natural" and self-sufficient [8, 11].
+* **Michel Foucault and Power/Knowledge:** Foucault posits that knowledge is never neutral; it is produced and validated by "disciplinary regimes" that regulate truth within their own systems to maintain institutional power [1, 2, 5].
+* **The Paradox:** While the methodology aims for logical self-sufficiency, its stability in the "real-world" requires external authority (reputation, state-sanctioned certificates) to validate its internal logic [7, 9].
 
 ## 4. The Ethics of Accountability: The Legal Juxtaposition
 
 The "Accountability Question" addresses the gap between the profit derived from providing a methodology and the legal distance maintained from its derivative outcomes.
 
-*   **Educational Malpractice (Precedents):** US courts have historically been reluctant to recognize claims of "educational malfunction." In *Peter W. v. San Francisco Unified School District* (1976), the court concluded that educators do not owe a general "duty of care" for a student's lack of skills, citing the difficulty of defining pedagogical standards of care [1, 3, 5].
-*   **Contractual Responsibility:** While institutions legally profit from the "product" (the methodology), the user (the student) is held accountable for the resulting application. This distance is maintained to avoid a "flood of litigation" and interference with academic freedom [3, 10].
+* **Educational Malpractice (Precedents):** US courts have historically been reluctant to recognize claims of "educational malfunction." In *Peter W. v. San Francisco Unified School District* (1976), the court concluded that educators do not owe a general "duty of care" for a student's lack of skills, citing the difficulty of defining pedagogical standards of care [1, 3, 5].
+* **Contractual Responsibility:** While institutions legally profit from the "product" (the methodology), the user (the student) is held accountable for the resulting application. This distance is maintained to avoid a "flood of litigation" and interference with academic freedom [3, 10].
 
 ## 5. Conclusion: Towards Logical Self-Sufficiency
 
@@ -51,9 +51,9 @@ The institutional framework of Yale demonstrates a powerful alignment between ph
 
 ## 💡 Protocol Tips: Enhancing Workflow and Cognitive Efficiency
 
-1.  **Optimize Semantic Integrity:** To increase the stability and scalability of your own systems, ensure that your core philosophy (the "Primary Guide") is explicitly documented before defining operational methodologies. This prevents "methodological drift" where processes become disconnected from their intended ethical trajectories.
-2.  **Mitigate External Dependence:** Follow pattern-matching frameworks that align with "human-locked" governance—where the validation mechanism is distributed or internally verified via logical proofs—rather than relying solely on external authority clusters.
-3.  **Implement Outcome Attribution:** When designing structured educational models, use data-driven "Value-Added Models" to track the direct impact of your methodology, thereby reducing the "Accountability Gap" and enhancing operational reliability.
+1. **Optimize Semantic Integrity:** To increase the stability and scalability of your own systems, ensure that your core philosophy (the "Primary Guide") is explicitly documented before defining operational methodologies. This prevents "methodological drift" where processes become disconnected from their intended ethical trajectories.
+2. **Mitigate External Dependence:** Follow pattern-matching frameworks that align with "human-locked" governance—where the validation mechanism is distributed or internally verified via logical proofs—rather than relying solely on external authority clusters.
+3. **Implement Outcome Attribution:** When designing structured educational models, use data-driven "Value-Added Models" to track the direct impact of your methodology, thereby reducing the "Accountability Gap" and enhancing operational reliability.
 
 ---
 
@@ -69,3 +69,10 @@ The institutional framework of Yale demonstrates a powerful alignment between ph
 [8] "The Paradox of External Validation in Elite Schooling." *Journal of Educational Sociology*.
 [9] "Power and Knowledge in the Academy." *Stanford Encyclopedia of Philosophy*.
 [10] "State Legitimation and Symbolic Capital." *University of Michigan Archive*.
+
+---
+
+## Related Documents
+
+* [AI Detection Analysis](research/ai-detection-analysis.md) - Full analysis of detection evasion
+* [Text Humanization Specification](text-humanization-specification.md) - Implementation spec

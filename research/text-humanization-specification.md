@@ -145,3 +145,12 @@ This machine-readable schema serves as the unyielding governance mechanism for d
 [12] "How to Humanize AI Text in 2026." MultipleChat.
 [13] "Words and Phrases that Make it Obvious You Used ChatGPT." Margaret Efron, Medium.
 [14] "List of 300+ AI Words, Phrases and Sentences to Avoid." ContentBeta.
+[17] "Computational Linguistic Analysis of Machine-Generated Text." Grossi School Research Archive.
+
+---
+
+## Related Documents
+
+* [Foundations of Legitimacy](foundations_of_legitimacy.md) - Yale case study
+* [Semantic Legitimacy Standards](semantic-legitimacy-standards.md) - Output standards
+* [AI Detection Analysis](research/ai-detection-analysis.md) - Full theoretical analysis

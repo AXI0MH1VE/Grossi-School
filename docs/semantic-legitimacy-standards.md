@@ -23,7 +23,7 @@ The rhythm of the text must reflect the non-linear nature of human thought:
 
 ## 3. The Multi-Pass Humanization Methodology
 
-All institutional text must undergo a rigorous four-pass structural reconstruction as defined in the [Multi-Pass Humanization Specification](file:///c:/Users/Lex/Desktop/Grossi%20School/text-humanization-specification.md):
+All institutional text must undergo a rigorous four-pass structural reconstruction as defined in the [Multi-Pass Humanization Specification](file:///c:/Users/Lex/Desktop/Grossi%20School/research/text-humanization-specification.md):
 
 1. **Pass 1: Structural Foundation (Information Seeding):** Strip introductory "fluff" and anchor text in verifiable human data to ensure Information Gain > 0.
 2. **Pass 2: Syntactic Restructuring (Burstiness Injection):** Disrupt rhythmic symmetry using the High-Low Technique to ensure high sentence length variance.
@@ -32,3 +32,10 @@ All institutional text must undergo a rigorous four-pass structural reconstructi
 
 ---
 **Institutional Standard:** All Grossi School courses must adhere to a >75% "Human Probability" score on recognized semantic audit tools.
+
+---
+
+## Related Documents
+
+* [AI Detection Analysis](research/ai-detection-analysis.md) - Full mathematical and theoretical analysis
+* [Foundations of Legitimacy](foundations_of_legitimacy.md) - Yale case study reference
