@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Grossi School — User Control Panel. Manage users, roles, permissions, and activity logs." />
+  <title>User Control Panel · Grossi School</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Design Tokens ──────────────────────────────────────────── */
+    :root {
+      --bg:          #070b14;
+      --surface:     #0d1424;
+      --glass:       rgba(255,255,255,0.04);
+      --glass-b:     rgba(255,255,255,0.08);
+      --border:      rgba(255,255,255,0.08);
+      --border-hi:   rgba(255,255,255,0.16);
+      --accent:      #5b8dee;
+      --accent-glow: rgba(91,141,238,0.25);
+      --accent2:     #8b5cf6;
+      --success:     #22c55e;
+      --warning:     #f59e0b;
+      --danger:      #ef4444;
+      --text:        #e2e8f0;
+      --muted:       #64748b;
+      --radius:      12px;
+      --radius-sm:   8px;
+    }
+
+    /* ── Reset ──────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 15px; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Background mesh ────────────────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% 10%, rgba(91,141,238,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 80%, rgba(139,92,246,0.10) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    /* ── Layout ─────────────────────────────────────────────────── */
+    .shell { display: flex; min-height: 100vh; position: relative; z-index: 1; }
+
+    /* ── Sidebar ─────────────────────────────────────────────────── */
+    .sidebar {
+      width: 240px; flex-shrink: 0;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      padding: 24px 0;
+      position: sticky; top: 0; height: 100vh;
+      overflow-y: auto;
+    }
+    .sidebar-logo {
+      padding: 0 20px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .sidebar-logo .logo-icon {
+      width: 34px; height: 34px; border-radius: 9px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: 700; color: #fff; flex-shrink: 0;
+    }
+    .sidebar-logo .logo-text { font-size: 0.85rem; font-weight: 600; letter-spacing: 0.02em; }
+    .sidebar-logo .logo-sub { font-size: 0.7rem; color: var(--muted); margin-top: 1px; }
+
+    .sidebar-nav { padding: 16px 12px; flex: 1; }
+    .nav-section-label {
+      font-size: 0.65rem; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.1em; color: var(--muted);
+      padding: 0 8px; margin: 16px 0 6px;
+    }
+    .nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 10px; border-radius: var(--radius-sm);
+      cursor: pointer; font-size: 0.85rem; font-weight: 500;
+      color: var(--muted); transition: all 0.18s ease;
+      position: relative; text-decoration: none;
+    }
+    .nav-item:hover  { background: var(--glass); color: var(--text); }
+    .nav-item.active {
+      background: rgba(91,141,238,0.12);
+      color: var(--accent);
+    }
+    .nav-item.active::before {
+      content: ''; position: absolute; left: 0; top: 20%; bottom: 20%;
+      width: 3px; border-radius: 2px;
+      background: var(--accent);
+    }
+    .nav-icon { font-size: 1rem; width: 20px; text-align: center; }
+    .nav-badge {
+      margin-left: auto; font-size: 0.65rem; font-weight: 600;
+      background: var(--accent2); color: #fff;
+      border-radius: 20px; padding: 1px 7px;
+    }
+
+    .sidebar-footer {
+      padding: 16px 20px; border-top: 1px solid var(--border);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .sidebar-footer .avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: linear-gradient(135deg,#5b8dee,#8b5cf6);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 700; color:#fff; flex-shrink:0;
+    }
+    .sidebar-footer .meta { flex: 1; min-width: 0; }
+    .sidebar-footer .meta-name { font-size: 0.8rem; font-weight: 600; }
+    .sidebar-footer .meta-role { font-size: 0.7rem; color: var(--muted); }
+
+    /* ── Main content ───────────────────────────────────────────── */
+    .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+    .topbar {
+      padding: 18px 28px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 16px;
+      background: rgba(13,20,36,0.6); backdrop-filter: blur(12px);
+      position: sticky; top: 0; z-index: 20;
+    }
+    .topbar-title { font-size: 1rem; font-weight: 600; flex: 1; }
+    .topbar-title span { color: var(--muted); font-weight: 400; font-size: 0.85rem; margin-left: 8px; }
+
+    .search-wrap { position: relative; }
+    .search-input {
+      background: var(--glass); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 8px 12px 8px 36px;
+      color: var(--text); font-family: inherit; font-size: 0.82rem;
+      width: 220px; outline: none; transition: all 0.2s;
+    }
+    .search-input:focus { border-color: var(--accent); background: var(--glass-b); box-shadow: 0 0 0 3px var(--accent-glow); }
+    .search-input::placeholder { color: var(--muted); }
+    .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 0.9rem; color: var(--muted); pointer-events: none; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 8px 16px; border-radius: var(--radius-sm);
+      font-family: inherit; font-size: 0.82rem; font-weight: 600;
+      cursor: pointer; border: none; transition: all 0.18s ease;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      box-shadow: 0 4px 14px var(--accent-glow);
+    }
+    .btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
+    .btn-ghost {
+      background: var(--glass); border: 1px solid var(--border); color: var(--text);
+    }
+    .btn-ghost:hover { background: var(--glass-b); border-color: var(--border-hi); }
+
+    /* ── Content area ───────────────────────────────────────────── */
+    .content { padding: 28px; flex: 1; overflow-y: auto; }
+
+    /* ── Stat cards ─────────────────────────────────────────────── */
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+      margin-bottom: 28px;
+    }
+    .stat-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 20px 22px;
+      position: relative; overflow: hidden;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .stat-card:hover { border-color: var(--border-hi); transform: translateY(-2px); }
+    .stat-card::after {
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 2px;
+    }
+    .stat-card.c-blue::after  { background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+    .stat-card.c-green::after { background: linear-gradient(90deg, #22c55e, #16a34a); }
+    .stat-card.c-amber::after { background: linear-gradient(90deg, #f59e0b, #f97316); }
+    .stat-card.c-purple::after{ background: linear-gradient(90deg, var(--accent2), #ec4899); }
+    .stat-label { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+    .stat-value { font-size: 2rem; font-weight: 700; margin: 6px 0 2px; }
+    .stat-delta { font-size: 0.75rem; color: var(--success); font-weight: 500; }
+    .stat-icon {
+      position: absolute; right: 18px; top: 50%; transform: translateY(-50%);
+      font-size: 2rem; opacity: 0.08;
+    }
+
+    /* ── Panel ──────────────────────────────────────────────────── */
+    .panel {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+      margin-bottom: 24px;
+    }
+    .panel-header {
+      padding: 16px 22px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 12px;
+    }
+    .panel-title { font-size: 0.88rem; font-weight: 600; flex: 1; }
+    .panel-sub   { font-size: 0.78rem; color: var(--muted); }
+
+    /* ── Filter tabs ────────────────────────────────────────────── */
+    .filter-tabs { display: flex; gap: 4px; }
+    .tab {
+      padding: 5px 12px; border-radius: 6px; font-size: 0.78rem;
+      font-weight: 500; cursor: pointer; border: 1px solid transparent;
+      background: transparent; color: var(--muted); transition: all 0.15s;
+    }
+    .tab.active  { background: rgba(91,141,238,0.15); color: var(--accent); border-color: rgba(91,141,238,0.3); }
+    .tab:hover:not(.active) { background: var(--glass); color: var(--text); }
+
+    /* ── User table ─────────────────────────────────────────────── */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    thead th {
+      padding: 11px 16px; text-align: left;
+      font-size: 0.72rem; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.07em; color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap; cursor: pointer; user-select: none;
+    }
+    thead th:hover { color: var(--text); }
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+      cursor: pointer;
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--glass); }
+    tbody tr.selected { background: rgba(91,141,238,0.07); }
+    td { padding: 13px 16px; font-size: 0.83rem; vertical-align: middle; }
+
+    .user-cell { display: flex; align-items: center; gap: 12px; }
+    .avatar-sm {
+      width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 700; color: #fff;
+    }
+    .user-name  { font-weight: 600; font-size: 0.84rem; }
+    .user-email { font-size: 0.73rem; color: var(--muted); margin-top: 2px; }
+
+    .badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 3px 10px; border-radius: 20px;
+      font-size: 0.71rem; font-weight: 600;
+    }
+    .badge-admin   { background: rgba(91,141,238,0.15); color: var(--accent); }
+    .badge-teacher { background: rgba(139,92,246,0.15); color: #a78bfa; }
+    .badge-student { background: rgba(34,197,94,0.15);  color: var(--success); }
+    .badge-guest   { background: rgba(100,116,139,0.15); color: var(--muted); }
+
+    .status-dot {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.78rem;
+    }
+    .dot {
+      width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+    }
+    .dot-online  { background: var(--success); box-shadow: 0 0 6px var(--success); }
+    .dot-away    { background: var(--warning); }
+    .dot-offline { background: var(--muted); }
+
+    .action-cell { display: flex; gap: 6px; opacity: 0; transition: opacity 0.15s; }
+    tbody tr:hover .action-cell { opacity: 1; }
+    .icon-btn {
+      width: 28px; height: 28px; border-radius: 6px; border: 1px solid var(--border);
+      background: var(--glass); color: var(--muted); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; transition: all 0.15s;
+    }
+    .icon-btn:hover { background: var(--glass-b); color: var(--text); border-color: var(--border-hi); }
+    .icon-btn.danger:hover { background: rgba(239,68,68,0.15); color: var(--danger); border-color: var(--danger); }
+
+    .mono { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--muted); }
+
+    /* ── Bottom grid ────────────────────────────────────────────── */
+    .bottom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+
+    /* ── Activity feed ──────────────────────────────────────────── */
+    .activity-list { padding: 8px 0; }
+    .activity-item {
+      display: flex; gap: 12px; padding: 12px 22px;
+      border-bottom: 1px solid var(--border); align-items: flex-start;
+      transition: background 0.15s;
+    }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-item:hover { background: var(--glass); }
+    .activity-avatar {
+      width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.68rem; font-weight: 700; color: #fff;
+    }
+    .activity-body { flex: 1; min-width: 0; }
+    .activity-text { font-size: 0.80rem; line-height: 1.45; }
+    .activity-text strong { font-weight: 600; }
+    .activity-meta { font-size: 0.71rem; color: var(--muted); margin-top: 3px; }
+    .activity-event {
+      display: inline-block; padding: 1px 7px; border-radius: 4px;
+      font-size: 0.68rem; font-weight: 600; margin-left: 6px;
+    }
+    .ev-login   { background: rgba(34,197,94,0.15);  color: var(--success); }
+    .ev-edit    { background: rgba(91,141,238,0.15);  color: var(--accent); }
+    .ev-delete  { background: rgba(239,68,68,0.15);   color: var(--danger); }
+    .ev-create  { background: rgba(139,92,246,0.15);  color: #a78bfa; }
+    .ev-export  { background: rgba(245,158,11,0.15);  color: var(--warning); }
+
+    /* ── Role summary ───────────────────────────────────────────── */
+    .role-list { padding: 12px 22px; display: flex; flex-direction: column; gap: 14px; }
+    .role-row { display: flex; align-items: center; gap: 12px; }
+    .role-label { width: 80px; font-size: 0.78rem; font-weight: 600; flex-shrink: 0; }
+    .role-bar-wrap { flex: 1; background: rgba(255,255,255,0.06); border-radius: 4px; height: 7px; overflow: hidden; }
+    .role-bar { height: 100%; border-radius: 4px; transition: width 1s cubic-bezier(.4,0,.2,1); }
+    .role-count { width: 28px; text-align: right; font-size: 0.78rem; color: var(--muted); flex-shrink: 0; }
+
+    /* ── Modal ──────────────────────────────────────────────────── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 100;
+      background: rgba(0,0,0,0.7); backdrop-filter: blur(6px);
+      align-items: center; justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--surface); border: 1px solid var(--border-hi);
+      border-radius: 16px; padding: 30px; width: 440px; max-width: 95vw;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+      animation: modal-in 0.22s ease;
+    }
+    @keyframes modal-in {
+      from { transform: scale(0.95) translateY(10px); opacity: 0; }
+      to   { transform: scale(1) translateY(0); opacity: 1; }
+    }
+    .modal-title { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+    .modal-sub   { font-size: 0.78rem; color: var(--muted); margin-bottom: 22px; }
+
+    .form-row { margin-bottom: 16px; }
+    .form-label { display: block; font-size: 0.75rem; font-weight: 600; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.06em; }
+    .form-input, .form-select {
+      width: 100%; padding: 10px 13px;
+      background: var(--glass); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); color: var(--text);
+      font-family: inherit; font-size: 0.84rem; outline: none;
+      transition: all 0.2s;
+    }
+    .form-input:focus, .form-select:focus {
+      border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+    .form-select option { background: #1a2035; }
+    .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; }
+
+    /* ── Toast ──────────────────────────────────────────────────── */
+    .toast-wrap { position: fixed; bottom: 24px; right: 24px; z-index: 200; display: flex; flex-direction: column; gap: 10px; }
+    .toast {
+      background: var(--surface); border: 1px solid var(--border-hi);
+      border-left: 3px solid var(--success);
+      border-radius: var(--radius-sm); padding: 13px 18px;
+      font-size: 0.82rem; min-width: 240px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+      animation: toast-in 0.25s ease;
+    }
+    @keyframes toast-in {
+      from { transform: translateX(20px); opacity: 0; }
+      to   { transform: translateX(0); opacity: 1; }
+    }
+    .toast.error { border-left-color: var(--danger); }
+
+    /* ── Checkbox ───────────────────────────────────────────────── */
+    input[type=checkbox] { accent-color: var(--accent); width: 14px; height: 14px; cursor: pointer; }
+
+    /* ── Scrollbar ──────────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+
+    /* ── Responsive ─────────────────────────────────────────────── */
+    @media (max-width: 1100px) {
+      .stats-grid { grid-template-columns: repeat(2,1fr); }
+      .bottom-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 720px) {
+      .sidebar { display: none; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- ── Sidebar ─────────────────────────────────────── -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">GS</div>
+      <div>
+        <div class="logo-text">Grossi School</div>
+        <div class="logo-sub">Control Panel</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Overview</div>
+      <a class="nav-item" href="#" id="nav-dashboard">
+        <span class="nav-icon">⊞</span> Dashboard
+      </a>
+
+      <div class="nav-section-label">Users</div>
+      <a class="nav-item active" href="#" id="nav-users">
+        <span class="nav-icon">👥</span> All Users
+        <span class="nav-badge" id="sidebar-count">12</span>
+      </a>
+      <a class="nav-item" href="#">
+        <span class="nav-icon">🔐</span> Roles &amp; Permissions
+      </a>
+      <a class="nav-item" href="#">
+        <span class="nav-icon">📋</span> Activity Log
+      </a>
+
+      <div class="nav-section-label">System</div>
+      <a class="nav-item" href="#">
+        <span class="nav-icon">🔔</span> Notifications
+        <span class="nav-badge" style="background:var(--warning)">3</span>
+      </a>
+      <a class="nav-item" href="#">
+        <span class="nav-icon">⚙️</span> Settings
+      </a>
+      <a class="nav-item" href="#">
+        <span class="nav-icon">📊</span> Reports
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="avatar">AL</div>
+      <div class="meta">
+        <div class="meta-name">Admin Lex</div>
+        <div class="meta-role">Super Admin</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── Main ──────────────────────────────────────────── -->
+  <div class="main">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar-title">
+        User Control <span>/ All Users</span>
+      </div>
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input class="search-input" type="search" id="search-input" placeholder="Search users…" autocomplete="off" />
+      </div>
+      <button class="btn btn-ghost" id="export-btn">⬆ Export</button>
+      <button class="btn btn-primary" id="add-user-btn">＋ Add User</button>
+    </header>
+
+    <!-- Content -->
+    <main class="content">
+
+      <!-- Stat cards -->
+      <div class="stats-grid">
+        <div class="stat-card c-blue">
+          <div class="stat-label">Total Users</div>
+          <div class="stat-value" id="stat-total">12</div>
+          <div class="stat-delta">↑ 2 this week</div>
+          <div class="stat-icon">👥</div>
+        </div>
+        <div class="stat-card c-green">
+          <div class="stat-label">Active Now</div>
+          <div class="stat-value" id="stat-online">4</div>
+          <div class="stat-delta">Currently online</div>
+          <div class="stat-icon">●</div>
+        </div>
+        <div class="stat-card c-amber">
+          <div class="stat-label">Pending Review</div>
+          <div class="stat-value">3</div>
+          <div class="stat-delta">Needs attention</div>
+          <div class="stat-icon">⏳</div>
+        </div>
+        <div class="stat-card c-purple">
+          <div class="stat-label">Admins</div>
+          <div class="stat-value" id="stat-admins">2</div>
+          <div class="stat-delta">Super + Admin</div>
+          <div class="stat-icon">🔐</div>
+        </div>
+      </div>
+
+      <!-- User table -->
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">User Roster</div>
+            <div class="panel-sub" id="table-sub">Showing all users</div>
+          </div>
+          <div class="filter-tabs">
+            <button class="tab active" data-filter="all">All</button>
+            <button class="tab" data-filter="admin">Admin</button>
+            <button class="tab" data-filter="teacher">Teacher</button>
+            <button class="tab" data-filter="student">Student</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table id="user-table">
+            <thead>
+              <tr>
+                <th><input type="checkbox" id="select-all" /></th>
+                <th>User</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>User ID</th>
+                <th>Last Seen</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="table-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Bottom grid -->
+      <div class="bottom-grid">
+
+        <!-- Activity log -->
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">Activity Log</div>
+              <div class="panel-sub">Last 10 events</div>
+            </div>
+            <button class="btn btn-ghost" style="font-size:0.75rem;padding:5px 10px;">View All</button>
+          </div>
+          <div class="activity-list" id="activity-list"></div>
+        </div>
+
+        <!-- Role distribution -->
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">Role Distribution</div>
+          </div>
+          <div class="role-list" id="role-list"></div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ── Add/Edit User Modal ─────────────────────────── -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <div class="modal-title" id="modal-title">Add New User</div>
+    <div class="modal-sub" id="modal-sub">Fill in the details below to create a new account.</div>
+    <form id="user-form" autocomplete="off">
+      <input type="hidden" id="edit-idx" value="-1" />
+      <div class="form-row-2">
+        <div class="form-row">
+          <label class="form-label">First Name</label>
+          <input class="form-input" id="f-first" type="text" placeholder="First" required />
+        </div>
+        <div class="form-row">
+          <label class="form-label">Last Name</label>
+          <input class="form-input" id="f-last" type="text" placeholder="Last" required />
+        </div>
+      </div>
+      <div class="form-row">
+        <label class="form-label">Email</label>
+        <input class="form-input" id="f-email" type="email" placeholder="user@grossischool.edu" required />
+      </div>
+      <div class="form-row-2">
+        <div class="form-row">
+          <label class="form-label">Role</label>
+          <select class="form-select" id="f-role">
+            <option value="admin">Admin</option>
+            <option value="teacher">Teacher</option>
+            <option value="student" selected>Student</option>
+            <option value="guest">Guest</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label class="form-label">Status</label>
+          <select class="form-select" id="f-status">
+            <option value="online">Online</option>
+            <option value="away">Away</option>
+            <option value="offline" selected>Offline</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="modal-cancel">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="modal-submit">Create User</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ── Toast container ────────────────────────────── -->
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+/* ── Data ──────────────────────────────────────────────────────── */
+const COLORS = ['#5b8dee','#8b5cf6','#22c55e','#f59e0b','#ef4444','#ec4899','#14b8a6','#f97316'];
+let users = [
+  { id:'USR-0001', first:'Alexandra', last:'Grossi',  email:'a.grossi@grossischool.edu',  role:'admin',   status:'online',  last:'Just now'    },
+  { id:'USR-0002', first:'Marcus',    last:'Webb',     email:'m.webb@grossischool.edu',    role:'admin',   status:'away',    last:'5 min ago'   },
+  { id:'USR-0003', first:'Sofia',     last:'Reinholt', email:'s.reinholt@grossischool.edu',role:'teacher', status:'online',  last:'2 min ago'   },
+  { id:'USR-0004', first:'Elias',     last:'Doran',    email:'e.doran@grossischool.edu',   role:'teacher', status:'online',  last:'14 min ago'  },
+  { id:'USR-0005', first:'Nora',      last:'Castillo', email:'n.castillo@grossischool.edu',role:'teacher', status:'offline', last:'1 hr ago'    },
+  { id:'USR-0006', first:'James',     last:'Okafor',   email:'j.okafor@grossischool.edu',  role:'student', status:'online',  last:'Just now'    },
+  { id:'USR-0007', first:'Priya',     last:'Nair',     email:'p.nair@grossischool.edu',    role:'student', status:'offline', last:'3 hrs ago'   },
+  { id:'USR-0008', first:'Leo',       last:'Marchand', email:'l.marchand@grossischool.edu',role:'student', status:'offline', last:'Yesterday'   },
+  { id:'USR-0009', first:'Amara',     last:'Diallo',   email:'a.diallo@grossischool.edu',  role:'student', status:'away',    last:'30 min ago'  },
+  { id:'USR-0010', first:'Riku',      last:'Tanaka',   email:'r.tanaka@grossischool.edu',  role:'student', status:'offline', last:'2 days ago'  },
+  { id:'USR-0011', first:'Celeste',   last:'Vidal',    email:'c.vidal@grossischool.edu',   role:'student', status:'offline', last:'3 days ago'  },
+  { id:'USR-0012', first:'Omar',      last:'Sheikh',   email:'o.sheikh@grossischool.edu',  role:'guest',   status:'offline', last:'1 week ago'  },
+];
+
+const activities = [
+  { user:'Alexandra G.', action:'edited role of', target:'Omar Sheikh', event:'edit',   time:'2 min ago' },
+  { user:'James O.',     action:'logged into the system',  target:'',             event:'login',  time:'4 min ago' },
+  { user:'Admin Lex',    action:'created user',  target:'Omar Sheikh',  event:'create', time:'18 min ago'},
+  { user:'Sofia R.',     action:'exported report',target:'Q1-Users.csv',event:'export', time:'1 hr ago'  },
+  { user:'Marcus W.',    action:'deleted record',target:'Draft Entry',  event:'delete', time:'2 hrs ago' },
+  { user:'Priya N.',     action:'logged into the system',  target:'',             event:'login',  time:'3 hrs ago' },
+  { user:'Admin Lex',    action:'updated settings',target:'Email SMTP', event:'edit',   time:'Yesterday' },
+  { user:'Elias D.',     action:'created course', target:'Math 101',    event:'create', time:'Yesterday' },
+  { user:'Amara D.',     action:'logged into the system',  target:'',             event:'login',  time:'2 days ago'},
+  { user:'Admin Lex',    action:'bulk-added',    target:'6 students',  event:'create', time:'3 days ago'},
+];
+
+/* ── Helpers ───────────────────────────────────────────────────── */
+let filterRole = 'all', searchQ = '', selected = new Set();
+let idCounter = users.length;
+
+const initials = u => (u.first[0] + u.last[0]).toUpperCase();
+const color    = u => COLORS[Math.abs(hashStr(u.first)) % COLORS.length];
+const hashStr  = s => s.split('').reduce((a,c) => a + c.charCodeAt(0), 0);
+
+function roleBadge(r) {
+  const map = { admin:'badge-admin', teacher:'badge-teacher', student:'badge-student', guest:'badge-guest' };
+  const labels = { admin:'⚡ Admin', teacher:'📖 Teacher', student:'🎓 Student', guest:'👁 Guest' };
+  return `<span class="badge ${map[r]}">${labels[r]||r}</span>`;
+}
+function statusDot(s) {
+  const cls = {online:'dot-online',away:'dot-away',offline:'dot-offline'}[s]||'dot-offline';
+  return `<span class="status-dot"><span class="dot ${cls}"></span>${s.charAt(0).toUpperCase()+s.slice(1)}</span>`;
+}
+
+/* ── Render table ──────────────────────────────────────────────── */
+function renderTable() {
+  const q = searchQ.toLowerCase();
+  const visible = users.filter(u => {
+    const matchRole   = filterRole === 'all' || u.role === filterRole;
+    const matchSearch = !q || `${u.first} ${u.last} ${u.email} ${u.role} ${u.id}`.toLowerCase().includes(q);
+    return matchRole && matchSearch;
+  });
+
+  const tbody = document.getElementById('table-body');
+  tbody.innerHTML = visible.map((u, vi) => {
+    const i = users.indexOf(u);
+    const sel = selected.has(i) ? 'selected' : '';
+    return `
+      <tr class="${sel}" onclick="toggleSelect(${i},event)" data-idx="${i}">
+        <td><input type="checkbox" ${selected.has(i)?'checked':''} onclick="toggleSelect(${i},event)" /></td>
+        <td>
+          <div class="user-cell">
+            <div class="avatar-sm" style="background:${color(u)}">${initials(u)}</div>
+            <div>
+              <div class="user-name">${u.first} ${u.last}</div>
+              <div class="user-email">${u.email}</div>
+            </div>
+          </div>
+        </td>
+        <td>${roleBadge(u.role)}</td>
+        <td>${statusDot(u.status)}</td>
+        <td><span class="mono">${u.id}</span></td>
+        <td style="color:var(--muted);font-size:0.78rem">${u.last}</td>
+        <td>
+          <div class="action-cell">
+            <button class="icon-btn" title="Edit" onclick="openEdit(${i},event)">✏️</button>
+            <button class="icon-btn danger" title="Remove" onclick="removeUser(${i},event)">🗑</button>
+          </div>
+        </td>
+      </tr>`;
+  }).join('');
+
+  document.getElementById('table-sub').textContent =
+    `Showing ${visible.length} of ${users.length} users`;
+  document.getElementById('stat-total').textContent = users.length;
+  document.getElementById('sidebar-count').textContent = users.length;
+  document.getElementById('stat-online').textContent = users.filter(u=>u.status==='online').length;
+  document.getElementById('stat-admins').textContent = users.filter(u=>u.role==='admin').length;
+  renderRoles();
+}
+
+function toggleSelect(i, e) {
+  e.stopPropagation();
+  selected.has(i) ? selected.delete(i) : selected.add(i);
+  renderTable();
+}
+
+document.getElementById('select-all').addEventListener('change', function() {
+  if (this.checked) users.forEach((_,i) => selected.add(i));
+  else selected.clear();
+  renderTable();
+});
+
+/* ── Role distribution ─────────────────────────────────────────── */
+function renderRoles() {
+  const counts = { admin:0, teacher:0, student:0, guest:0 };
+  users.forEach(u => counts[u.role] = (counts[u.role]||0) + 1);
+  const max = Math.max(...Object.values(counts));
+  const colors = { admin:'linear-gradient(90deg,var(--accent),var(--accent2))', teacher:'linear-gradient(90deg,#a78bfa,#ec4899)', student:'linear-gradient(90deg,var(--success),#16a34a)', guest:'linear-gradient(90deg,var(--muted),#475569)' };
+  document.getElementById('role-list').innerHTML = Object.entries(counts).map(([r,c]) => `
+    <div class="role-row">
+      <div class="role-label">${r.charAt(0).toUpperCase()+r.slice(1)}</div>
+      <div class="role-bar-wrap">
+        <div class="role-bar" style="width:${max?((c/max)*100).toFixed(1):0}%;background:${colors[r]}"></div>
+      </div>
+      <div class="role-count">${c}</div>
+    </div>`).join('');
+}
+
+/* ── Activity feed ─────────────────────────────────────────────── */
+function renderActivity() {
+  document.getElementById('activity-list').innerHTML = activities.map(a => {
+    const c = COLORS[Math.abs(hashStr(a.user)) % COLORS.length];
+    const ini = a.user.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    return `
+      <div class="activity-item">
+        <div class="activity-avatar" style="background:${c}">${ini}</div>
+        <div class="activity-body">
+          <div class="activity-text">
+            <strong>${a.user}</strong> ${a.action}${a.target ? ' <strong>'+a.target+'</strong>' : ''}
+            <span class="activity-event ev-${a.event}">${a.event}</span>
+          </div>
+          <div class="activity-meta">${a.time}</div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+/* ── Filter tabs ───────────────────────────────────────────────── */
+document.querySelectorAll('.tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    filterRole = btn.dataset.filter;
+    renderTable();
+  });
+});
+
+/* ── Search ────────────────────────────────────────────────────── */
+document.getElementById('search-input').addEventListener('input', function() {
+  searchQ = this.value;
+  renderTable();
+});
+
+/* ── Modal: Add ────────────────────────────────────────────────── */
+document.getElementById('add-user-btn').addEventListener('click', () => openModal(-1));
+document.getElementById('modal-cancel').addEventListener('click', closeModal);
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeModal();
+});
+
+function openModal(idx) {
+  document.getElementById('edit-idx').value = idx;
+  const u = idx >= 0 ? users[idx] : null;
+  document.getElementById('modal-title').textContent  = u ? 'Edit User' : 'Add New User';
+  document.getElementById('modal-sub').textContent    = u ? `Editing ${u.first} ${u.last}'s account.` : 'Fill in the details below to create a new account.';
+  document.getElementById('modal-submit').textContent = u ? 'Save Changes' : 'Create User';
+  document.getElementById('f-first').value  = u ? u.first : '';
+  document.getElementById('f-last').value   = u ? u.last : '';
+  document.getElementById('f-email').value  = u ? u.email : '';
+  document.getElementById('f-role').value   = u ? u.role : 'student';
+  document.getElementById('f-status').value = u ? u.status : 'offline';
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function openEdit(idx, e) { e.stopPropagation(); openModal(idx); }
+function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
+
+document.getElementById('user-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const idx   = parseInt(document.getElementById('edit-idx').value);
+  const first  = document.getElementById('f-first').value.trim();
+  const last   = document.getElementById('f-last').value.trim();
+  const email  = document.getElementById('f-email').value.trim();
+  const role   = document.getElementById('f-role').value;
+  const status = document.getElementById('f-status').value;
+  if (!first || !last || !email) return;
+
+  if (idx >= 0) {
+    users[idx] = { ...users[idx], first, last, email, role, status };
+    toast(`✅ ${first} ${last} updated successfully.`);
+    activities.unshift({ user:'Admin Lex', action:'edited', target:`${first} ${last}`, event:'edit', time:'Just now' });
+  } else {
+    idCounter++;
+    const padded = String(idCounter).padStart(4,'0');
+    users.push({ id:`USR-${padded}`, first, last, email, role, status, last:'Just now' });
+    toast(`✅ ${first} ${last} created successfully.`);
+    activities.unshift({ user:'Admin Lex', action:'created user', target:`${first} ${last}`, event:'create', time:'Just now' });
+  }
+  activities.length = Math.min(activities.length, 10);
+  closeModal();
+  renderTable();
+  renderActivity();
+});
+
+/* ── Remove ────────────────────────────────────────────────────── */
+function removeUser(idx, e) {
+  e.stopPropagation();
+  const u = users[idx];
+  if (!confirm(`Remove ${u.first} ${u.last}? This action cannot be undone.`)) return;
+  activities.unshift({ user:'Admin Lex', action:'removed user', target:`${u.first} ${u.last}`, event:'delete', time:'Just now' });
+  activities.length = Math.min(activities.length, 10);
+  users.splice(idx, 1);
+  selected.clear();
+  toast(`🗑 ${u.first} ${u.last} removed.`, true);
+  renderTable();
+  renderActivity();
+}
+
+/* ── Export ────────────────────────────────────────────────────── */
+document.getElementById('export-btn').addEventListener('click', () => {
+  const hdr = ['ID','First','Last','Email','Role','Status','Last Seen'];
+  const rows = users.map(u => [u.id,u.first,u.last,u.email,u.role,u.status,u.last]);
+  const csv = [hdr, ...rows].map(r => r.map(c => `"${c}"`).join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `grossischool-users-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  toast('⬆ User roster exported as CSV.');
+  activities.unshift({ user:'Admin Lex', action:'exported report', target:'users.csv', event:'export', time:'Just now' });
+  activities.length = Math.min(activities.length, 10);
+  renderActivity();
+});
+
+/* ── Toast ─────────────────────────────────────────────────────── */
+function toast(msg, isError) {
+  const el = document.createElement('div');
+  el.className = 'toast' + (isError ? ' error' : '');
+  el.textContent = msg;
+  document.getElementById('toast-wrap').prepend(el);
+  setTimeout(() => el.remove(), 3500);
+}
+
+/* ── Nav items interactivity ───────────────────────────────────── */
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', function(e) {
+    e.preventDefault();
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+/* ── Init ──────────────────────────────────────────────────────── */
+renderTable();
+renderActivity();
+</script>
+</body>
+</html>
