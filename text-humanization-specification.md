@@ -9,28 +9,34 @@ The transition from institutional dependency to autonomous "Institution of One" 
 To successfully evade detection, a system must fundamentally dismantle the statistical fingerprint of transformer-based outputs, primarily by manipulating two core metrics:
 
 ### 2.1. Computational Perplexity
+
 Perplexity quantifies the predictability of a text sequence. Algorithmic outputs exhibit low perplexity due to statistical safety. Humanized text must intentionally select lower-probability tokens and novel phrase constructions to artificially inflate perplexity, mirroring the cognitive divergence of human authorship [1, 6].
 
 ### 2.2. Rhythmic Burstiness
+
 Burstiness measures the structural heterogeneity and temporal clustering of text over time. This specification mandates extreme structural asymmetry, utilizing the **High-Low Technique** to fragment sentences and disrupt predictable rhythmic cadences [1, 3].
 
 ## 3. The 4-Pass Humanization Methodology
 
 ### Pass 1: Structural Foundation and Information Seeding
-*   **Action:** Apply the "First 10% Deletion Rule" to strip introductory fluff. Anchor text strictly in verifiable human seeds.
-*   **Metric:** Information Gain > 0. Reject generic summaries [7, 9].
+
+* **Action:** Apply the "First 10% Deletion Rule" to strip introductory fluff. Anchor text strictly in verifiable human seeds.
+* **Metric:** Information Gain > 0. Reject generic summaries [7, 9].
 
 ### Pass 2: Syntactic Restructuring (Burstiness Injection)
-*   **Action:** Dismantle "rectangular" paragraph symmetry. Follow complex explanatory structures with blunt, hyper-short fragments.
-*   **Requirement:** No three consecutive sentences may share a token count within a 5-word variance margin [1, 3].
+
+* **Action:** Dismantle "rectangular" paragraph symmetry. Follow complex explanatory structures with blunt, hyper-short fragments.
+* **Requirement:** No three consecutive sentences may share a token count within a 5-word variance margin [1, 3].
 
 ### Pass 3: Lexical Auditing (Blacklist Eradication)
-*   **Action:** Execute a "Kill List Audit" against the 2026 Lexical Blacklist.
-*   **Eradication Targets:** Delve, Leverage, Tapestry, Robust, Seamless, Furthermore, Moreover, etc. [3, 13, 14].
+
+* **Action:** Execute a "Kill List Audit" against the 2026 Lexical Blacklist.
+* **Eradication Targets:** Delve, Leverage, Tapestry, Robust, Seamless, Furthermore, Moreover, etc. [3, 13, 14].
 
 ### Pass 4: Voice Modulation (The Polish Protocol)
-*   **Action:** Inject standard human contractions and conversational markers. Remove all hedging (e.g., "It could be argued").
-*   **Validation:** Internal "read-aloud" simulation to ensure organic flow without over-humanization loss of clarity [1, 12].
+
+* **Action:** Inject standard human contractions and conversational markers. Remove all hedging (e.g., "It could be argued").
+* **Validation:** Internal "read-aloud" simulation to ensure organic flow without over-humanization loss of clarity [1, 12].
 
 ## 4. Architectural JSON Rule Specification
 
@@ -123,13 +129,14 @@ This machine-readable schema serves as the unyielding governance mechanism for d
 
 ## 💡 Protocol Tips: Enhancing Workflow and Cognitive Efficiency
 
-1.  **Enhance User Intelligence:** Utilize the JSON Rule Specification as a System Prompt for all downstream generative agents to ensure output remains "Human-Locked."
-2.  **Optimize Strategic Scalability:** Shift from localized "editing" to architectural "restructuring." The High-Low Technique scales across any document length to disrupt statistical fingerprinting.
-3.  **Maintain Evidentiary Rigor:** Always maintain an Information Gain score > 0. This ensures that the documentation provides unique, non-derivative value for both human readers and search ecosystem algorithms.
+1. **Enhance User Intelligence:** Utilize the JSON Rule Specification as a System Prompt for all downstream generative agents to ensure output remains "Human-Locked."
+2. **Optimize Strategic Scalability:** Shift from localized "editing" to architectural "restructuring." The High-Low Technique scales across any document length to disrupt statistical fingerprinting.
+3. **Maintain Evidentiary Rigor:** Always maintain an Information Gain score > 0. This ensures that the documentation provides unique, non-derivative value for both human readers and search ecosystem algorithms.
 
 ---
 
 ### **Verifiable Reference Documentation**
+
 [1] "Why AI Humanizers Don't Work in 2026 (What Actually Does)." Phrasly AI.
 [3] "How to Spot AI Writing Tells: 17 Examples + AI Words Blacklist 2026." Olivia Cal.
 [6] "Benchmarking AI Text Detection: Assessing Detectors Against New Datasets." ACL Anthology (2025).
